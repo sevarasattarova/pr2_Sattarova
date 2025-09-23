@@ -16,8 +16,6 @@ while (true)
     Console.WriteLine("4 - Заказать поставку (пополнить количество)");
     Console.WriteLine("5 - Продать товар");
     Console.WriteLine("6 - Поиск товаров (по коду, названию, категории)");
-    Console.WriteLine("7 - История продаж (и отмена последней продажи)");
-    Console.WriteLine("8 - Отчёт о продажах");
     Console.WriteLine("0 - Выход");
     Console.Write("Выберите команду: ");
     string choice = Console.ReadLine().Trim();
@@ -30,8 +28,6 @@ while (true)
         case "4": OrderSupply(products); break;
         case "5": SellProduct(products); break;
         case "6": SearchProducts(products); break;
-        case "7": //ShowSalesHistoryAndUndo(); break;
-        case "8": //PrintSalesReport(); break;
         case "0": return;
         default: Console.WriteLine("Неверная команда. Попробуйте снова."); break;
     }
@@ -101,27 +97,28 @@ static void OrderSupply(List<Product> products)
 
 static void SellProduct(List<Product> products)
 {
+    bool flag = true;
     Console.WriteLine("Напишите уже добавленный товар,который вы хотите продать");
-    string temp = Console.ReadLine();
+    int temp = Convert.ToInt32(Console.ReadLine());
     foreach (Product t in products)
     {
-        if (temp == t.Name)
+        if (temp == t.id)
         {
             Console.WriteLine("напиишите колличество товара который хотите продать");
             int temp1 = Convert.ToInt32(Console.ReadLine());
             if (t.quantity >= temp1)
             {
                 t.quantity -= temp1;
+                
             }
-            else
-            {
-                Console.WriteLine("вашего товара недостаточно в наличии");
-            }
+            flag = false;
+
         }
-        else
-        {
-            Console.WriteLine("вашего товара не нашлось в списке(");
-        }
+      
+    }
+    if (flag)
+    {
+        Console.WriteLine("вашего товара не нашлось в списке(");
     }
 }
 
@@ -157,9 +154,8 @@ static void SearchProducts(List<Product> products)
                 Console.WriteLine($"{t.Name}, {t.id}, {t.price}, {t.quantity},{t.InStock},{t.Category}");
                 flag = false;
             }
-
-            if (flag) { Console.WriteLine("товар не найден"); }
         }
+        if (flag) { Console.WriteLine("товар не найден"); }
     }
     void poiskName()
     {
@@ -175,6 +171,7 @@ static void SearchProducts(List<Product> products)
 
         }
         if (flag) { Console.WriteLine("товар не найден"); }
+
 
     }
 
