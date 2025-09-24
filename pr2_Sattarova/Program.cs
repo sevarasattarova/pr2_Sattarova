@@ -27,9 +27,9 @@ while (true)
     {
         case "1": KolvoSlov(); break;
         case "2": Korotkoe(); break;
-        case "3":
+        case "3": 
         case "4":
-        case "5":
+        case "5": Dlinnoe(); break;
         case "6":
         case "7":
         case "8":
@@ -55,7 +55,19 @@ void Korotkoe()
         {
             min = word;
         }
-        Console.WriteLine(min);
+        Console.WriteLine($"Самое короткое слово: {min}");
         break;
     }
+}
+void Dlinnoe()
+{
+    string max = "";
+    foreach (var word in textlist)
+    {
+        if (word.Length > max.Length)
+        {
+            max = word;
+        }
+    }
+    Console.WriteLine($"Самое длинное слово: {max}");
 }
