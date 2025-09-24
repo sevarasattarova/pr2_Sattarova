@@ -1,4 +1,6 @@
-﻿Console.WriteLine("Введите текст на русском(миниум 100 символов)");
+﻿using System.Diagnostics.Metrics;
+
+Console.WriteLine("Введите текст на русском(миниум 100 символов)");
 string text = Console.ReadLine();
 while (text.Length < 100) 
 { 
@@ -6,6 +8,7 @@ while (text.Length < 100)
     text = Console.ReadLine();
 }
 string[] textlist = text.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+List<textClass> list = new List<textClass>();
 
 while (true) 
 {
@@ -26,29 +29,35 @@ while (true)
     Console.WriteLine();
     switch(choice)
     {
-        case "1": KolvoSlov(); break;
-        case "2": Korotkoe(); break;
-        case "3": KolvoPredloj(); break;
-        case "4": KolvoGlasSoglas(); break;
-        case "5": Dlinnoe(); break;
-        case "6": Statistic(); break;
-        case "7":
+        case "1": Console.WriteLine($"Кол-во слов в тексте: {textlist.Length}"); break;
+        case "2": Console.WriteLine($"Самое короткое слово: {Korotkoe(textlist)}"); break;
+        case "3": Console.WriteLine($"Кол-во предложений в тексте: {KolvoPredloj(text)}"); break;
+        case "4": Console.WriteLine($"Кол-во гласных: {KolvoGlas(text)} Кол-во согласных: {KolvoSoglas(text)}"); break;
+        case "5": Console.WriteLine($"Самое длинное слово: {Dlinnoe(textlist)}"); break;
+        case "6": foreach (var pair in Statistic(text).OrderByDescending(x => x.Value))
+            {
+                if (pair.Value > 0)
+                {
+                    Console.WriteLine($"Буква '{pair.Key}': {pair.Value} раз");
+                }
+            }
+            break;
+        case "7": list.Add(new textClass(text, textlist.Length, Korotkoe(textlist), Dlinnoe(textlist) , KolvoGlas(text), KolvoSoglas(text), KolvoPredloj(text), Statistic(text))); break;
         case "8":
         case "9":
+        case "0": return;
     
         default: Console.WriteLine("Невереная команда, попробуйте другую"); break;
     }
 }
-void KolvoSlov()
+
+///
+string Korotkoe(string[] textlist)
 {
-    Console.WriteLine($"Кол-во слов в тексте: {textlist.Length}");
-}
-void Korotkoe()
-{
-    
-    foreach(var word in textlist)
+    string min = " ";
+    foreach (var word in textlist)
     {
-        string min = " ";
+       
         if (word.Length > min.Length)
         {
             continue;
@@ -57,11 +66,13 @@ void Korotkoe()
         {
             min = word;
         }
-        Console.WriteLine($"Самое короткое слово: {min}");
         break;
     }
+    return min;
 }
-void Dlinnoe()
+
+///
+string Dlinnoe(string[] textlist)
 {
     string max = "";
     foreach (var word in textlist)
@@ -71,9 +82,11 @@ void Dlinnoe()
             max = word;
         }
     }
-    Console.WriteLine($"Самое длинное слово: {max}");
+    return max;
 }
-void KolvoPredloj()
+
+///
+int KolvoPredloj(string text)
 {
     int count = 0;
     string upper = "ЙЦУКЕНГШЩЗХЪЭЖДЛОРПАВЫФЯЧСМИТЬБЮЁ";
@@ -94,30 +107,45 @@ void KolvoPredloj()
     {
         count++;
     }
-
-    Console.WriteLine($"Кол-во предложений в тексте: {count}");
+    return count;
 }
-void KolvoGlasSoglas ()
+
+///
+int KolvoGlas(string text)
 {
     string glas = "аеёиоуыэюяАЕЁИОУЫЭЮЯ";
-    string soglas = "бвгджзйклмнпрстфхцчшщБВГДЖЗЙКЛМНПРСТФХЦЧШЩ";
     int countg = 0;
-    int counts = 0;
     foreach (char i in text)
     {
         if (glas.Contains(i))
         {
             countg++;
         }
-        else if (soglas.Contains(i))
+    }
+    return countg;
+}
+
+///
+int KolvoSoglas (string text)
+{
+    string soglas = "бвгджзйклмнпрстфхцчшщБВГДЖЗЙКЛМНПРСТФХЦЧШЩ";
+    int counts = 0;
+    foreach (char i in text)
+    {
+        if (soglas.Contains(i))
         {
             counts++;
         }
     }
-    Console.WriteLine($"Кол-во согласных: {counts}");
-    Console.WriteLine($"Кол-во гласных: {countg}");
+    return counts;
+
 }
-void Statistic()
+
+
+
+
+
+Dictionary<char, int> Statistic(string text)
 {
     string letter = "абвгдеёжзийклмнопрстуфхцчшщъыьэюя";
     Dictionary<char, int> counts = new Dictionary<char, int>();
@@ -134,11 +162,33 @@ void Statistic()
     }
     Console.WriteLine($"Статистика по частоте встречаемости букв:");
     Console.WriteLine("========================================");
-    foreach(var pair in counts.OrderByDescending(x => x.Value))
+    return counts;
+}
+
+public class textClass
+{
+    static public int ids = 0;
+    public int id;
+    public string text;
+    public int countWord;
+    public string shortWord;
+    public string LongWorld;
+    public int Countpredloj;
+    public int glas;
+    public int soglas;
+    public Dictionary<char, int> statistic; 
+
+    public textClass(string text, int countWord, string shortWord, string longWorld, int countpredloj, int glas, int soglas, Dictionary<char, int> statistic)
     {
-        if (pair.Value > 0)
-        {
-            Console.WriteLine($"Буква '{pair.Key}': {pair.Value} раз");
-        }
+        ids += 1;
+        id += ids;
+        this.text = text;
+        this.countWord = countWord;
+        this.shortWord = shortWord;
+        this.LongWorld = longWorld;
+        this.Countpredloj = countpredloj;
+        this.glas = glas;
+        this.soglas = soglas;
+        this.statistic = statistic;
     }
 }
