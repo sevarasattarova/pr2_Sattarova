@@ -6,6 +6,7 @@ while (text.Length < 100)
     text = Console.ReadLine();
 }
 string[] textlist = text.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
 while (true) 
 {
     Console.WriteLine("******************");
@@ -28,12 +29,13 @@ while (true)
         case "1": KolvoSlov(); break;
         case "2": Korotkoe(); break;
         case "3": KolvoPredloj(); break;
-        case "4":
+        case "4": KolvoGlasSoglas(); break;
         case "5": Dlinnoe(); break;
-        case "6":
+        case "6": Statistic(); break;
         case "7":
         case "8":
         case "9":
+    
         default: Console.WriteLine("Невереная команда, попробуйте другую"); break;
     }
 }
@@ -74,13 +76,69 @@ void Dlinnoe()
 void KolvoPredloj()
 {
     int count = 0;
-    foreach (int i in text)
+    string upper = "ЙЦУКЕНГШЩЗХЪЭЖДЛОРПАВЫФЯЧСМИТЬБЮЁ";
+
+    for (int i = 0; i < text.Length; i++)
     {
-        if (text[i] == '.')
+        if (i < text.Length - 1 && (text[i] == '.' || text[i] == '!' || text[i] == '?'))
         {
-            count++;
+            if (i == text.Length - 1 ||
+                upper.Contains(text[i + 1]) ||
+                (text[i + 1] == ' ' && i < text.Length - 2 && upper.Contains(text[i + 2])))
+            {
+                count++;
+            }
         }
     }
-    Console.WriteLine($"Кол-во предложений в тексте: {count}");
+    if (text.Length > 0 && !".!?".Contains(text[text.Length - 1]))
+    {
+        count++;
+    }
 
+    Console.WriteLine($"Кол-во предложений в тексте: {count}");
+}
+void KolvoGlasSoglas ()
+{
+    string glas = "аеёиоуыэюяАЕЁИОУЫЭЮЯ";
+    string soglas = "бвгджзйклмнпрстфхцчшщБВГДЖЗЙКЛМНПРСТФХЦЧШЩ";
+    int countg = 0;
+    int counts = 0;
+    foreach (char i in text)
+    {
+        if (glas.Contains(i))
+        {
+            countg++;
+        }
+        else if (soglas.Contains(i))
+        {
+            counts++;
+        }
+    }
+    Console.WriteLine($"Кол-во согласных: {counts}");
+    Console.WriteLine($"Кол-во гласных: {countg}");
+}
+void Statistic()
+{
+    string letter = "абвгдеёжзийклмнопрстуфхцчшщъыьэюя";
+    Dictionary<char, int> counts = new Dictionary<char, int>();
+    foreach (char i in letter)
+    {
+        counts[i] = 0;
+    }
+    foreach (char c in text.ToLower())
+    {
+        if (counts.ContainsKey(c))
+        {
+            counts[c]++;
+        }
+    }
+    Console.WriteLine($"Статистика по частоте встречаемости букв:");
+    Console.WriteLine("========================================");
+    foreach(var pair in counts.OrderByDescending(x => x.Value))
+    {
+        if (pair.Value > 0)
+        {
+            Console.WriteLine($"Буква '{pair.Key}': {pair.Value} раз");
+        }
+    }
 }
