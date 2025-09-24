@@ -27,7 +27,7 @@ while (true)
     {
         case "1": KolvoSlov(); break;
         case "2": Korotkoe(); break;
-        case "3": 
+        case "3": KolvoPredloj(); break;
         case "4":
         case "5": Dlinnoe(); break;
         case "6":
@@ -70,4 +70,17 @@ void Dlinnoe()
         }
     }
     Console.WriteLine($"Самое длинное слово: {max}");
+}
+void KolvoPredloj()
+{
+    int count = 0;
+    foreach (int i in text)
+    {
+        if (text[i] == '.')
+        {
+            count++;
+        }
+    }
+    Console.WriteLine($"Кол-во предложений в тексте: {count}");
+
 }
