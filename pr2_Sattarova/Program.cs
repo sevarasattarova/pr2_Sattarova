@@ -1,6 +1,6 @@
 ﻿Console.WriteLine("Введите текст на русском(миниум 100 символов)");
 string text = Console.ReadLine();
-while (text.Length > 100) 
+while (text.Length < 100) 
 { 
     Console.WriteLine("Введите текст на русском(миниум 100 символов)");
     text = Console.ReadLine();
@@ -26,7 +26,7 @@ while (true)
     switch(choice)
     {
         case "1": KolvoSlov(); break;
-        case "2":
+        case "2": Korotkoe(); break;
         case "3":
         case "4":
         case "5":
@@ -34,6 +34,28 @@ while (true)
         case "7":
         case "8":
         case "9":
-        default: Console.WriteLine("Невереная команда, попробуйте другую");
+        default: Console.WriteLine("Невереная команда, попробуйте другую"); break;
+    }
+}
+void KolvoSlov()
+{
+    Console.WriteLine($"Кол-во слов в тексте: {textlist.Length}");
+}
+void Korotkoe()
+{
+    
+    foreach(var word in textlist)
+    {
+        string min = " ";
+        if (word.Length > min.Length)
+        {
+            continue;
+        }
+        else
+        {
+            min = word;
+        }
+        Console.WriteLine(min);
+        break;
     }
 }
